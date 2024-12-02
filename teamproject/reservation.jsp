@@ -152,58 +152,7 @@
 				</tr>
 			</table>
 		</div>
-		<!-- 가게 예약테이블 -->
-		<div>
-			<table>
-				<colgroup>
-				<col width="70%"/>
-				<col width="*"/>
-			</colgroup>
-				<tr>
-					<td colspan="2">예약 테이블</td>
-					<!--날짜.인원.시간-->
-				</tr>
-				<tr>
-					<td rowspan="2"> < 2024년 11월 > </td>
-					<!-- 달력 -->
-					<td>인원</td>
-					<!-- 인원을 최대인원을 선택하면 1~최대인원 -->
-				</tr>
-				<tr>
-					<td> 시간 </td>
-					<!--  시간차를 선택하면 자동으로 영업시간 맞춰서 자동으로  -->
-				</tr>
-			</table>
-			<div>
-				<!-- 다음버튼 > 메뉴선택화면 -->
-				<button type="button">다음</button>
-			</div>
-		</div>
-		<!-- 가게 예약테이블2 -->
-		<div>
-			<table>
-				<tr>
-					<td>예약 테이블</td>
-					<td>메뉴화면</td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<td> 메뉴 </td>
-					<td>+ -</td>
-				</tr>
-			</table>
-			<!-- 메뉴 추가하면 나오게 만들기 if이용 -->
-			<div>
-			추가한 메뉴 +-
-			</div>
-			<div>
-			총금액
-			</div>
-			<div>
-				<!--  예약하기 버튼 > 예약완료 나오고 다시 그전 화면으로 -->
-				<button type="submit">예약하기</button>
-			</div>
+		
 		</div>
 		<!-- 가게 공지사항 게시판 테이블 -->
 		<div>
@@ -267,7 +216,10 @@
 		<div>
 		지도 > 배우고 사용
 		</div>
-		
+		<div>
+			<!-- 예약버튼 > 예약페이지로 -->
+			<button type="button">예약</button>
+		</div>
 		</section>
   
 		<footer>

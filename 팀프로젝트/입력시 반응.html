@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+ </head>
+ <script>
+	function fn_a1(){
+		document.frm.a1.value = document.frm.msg.value;	
+	}
+	function fn_a2(){
+		document.frm.a2.value = document.frm.msg.value;	
+	}
+	function fn_a3(){
+		document.frm.a3.value = document.frm.msg.value;	
+	}
+ </script>
+ <body>
+  
+  <form name="frm">
+  <input type="text" name="msg" onkeypress="fn_a1()"
+								onkeyup="fn_a2()"
+								onkeydown="fn_a3()"><br>
+  
+  keypress<input type="text" name ="a1" ><br>
+  kyeup<input type="text" name ="a2" ><br>
+  keydown<input type="text" name ="a3" ><br>
+  </form>
+  
+ </body>
+</html>

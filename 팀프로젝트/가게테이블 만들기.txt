@@ -1,0 +1,35 @@
+가게테이블 만들기
+1번도 가게회원정보랑 엮여야함
+1.가게 정보
+(1)가게종합정보테이블
+가게고유번호	stid
+가게이름	storename
+한줄정보	content
+한줄위치	way
+(2)가게상세정보테이블
+운영시간	operatinghour 
+전화번호	tel
+휴무일	dayoff
+상제정보	information
+
+2.가게 공지사항
+가게고유번호	stid
+공지구분		gubun
+공지제목		title
+공지내용		content
+공지등록일		rdate
+
+3.가게메뉴판
+가게고유번호	stid
+메뉴사진		photo
+메뉴이름		name
+메뉴설명		content
+메뉴가격		price
+
+4.리뷰
+회원고유번호	id
+가게고유번호	stid
+가게평점		lev
+리뷰내용		content
+
+

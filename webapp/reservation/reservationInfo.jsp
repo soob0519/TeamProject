@@ -11,7 +11,7 @@
 String sql = "SELECT 	"
 					+"STID	"
 					+",STORENAME	"
-					+",CONTENT	"
+					+",STCONTENT	"
 					+",WAY	"
 					+",OPERATINGHOUR	"
 					+",TEL	"
@@ -22,7 +22,7 @@ ResultSet rs = stmt.executeQuery(sql);
 rs.next();
 String stid = rs.getString("stid");
 String storename = rs.getString("storename");
-String content = rs.getString("content");
+String stcontent = rs.getString("stcontent");
 String way = rs.getString("way");
 String operatinghour = rs.getString("operatinghour");
 String tel = rs.getString("tel");
@@ -40,8 +40,8 @@ information = information.replace("\n", "<br>");
 String sql2 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT "
-			+"				STID,GUBUN,TITLE,CONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" 			FROM STOREBOARD "
+			+"				STID,GUBUN,TITLE,NTCONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
+			+" 			FROM STORENOTICE "
 			+" 				ORDER BY RDATE DESC ) A ) B "
 			+"	WHERE	"
 			+" RN BETWEEN 1 AND 3";
@@ -56,8 +56,8 @@ String sql3 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT "
 			+"			STID	"
-			+"			,NAME	"
-			+"			,CONTENT	"
+			+"			,MENUNAME	"
+			+"			,MECONTENT	"
 			+"			,PRICE		"
 			+" 		FROM STOREMENU ) A ) B "
 			+"	WHERE	"
@@ -72,8 +72,8 @@ String sql4 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT	"
 			+"			STID"
-			+"			,ID	"
-			+"			,CONTENT	"
+			+"			,CUID	"
+			+"			,RECONTENT	"
 			+"			,LEV	"
 			+"		,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
 			+" FROM STOREREVIEW ORDER BY RDATE DESC ) A ) B "
@@ -164,7 +164,7 @@ tr,td {
 				</tr>
 				<tr>
 					<!-- 짧은설명 -->
-					<td><%=content %></td>
+					<td><%=stcontent %></td>
 				</tr>
 				<tr>
 					<!-- 위치안내 -->
@@ -224,13 +224,13 @@ tr,td {
 				while(rs2.next()){
 				String gubun = rs2.getString("gubun");
 				String title = rs2.getString("title");
-				String content2 = rs2.getString("content");
+				String ntcontent = rs2.getString("ntcontent");
 				String rdate = rs2.getString("rdate");				
 				%>
 					<tr>
 					<td><%=gubun %></td>
 					<td><%=title %></td>
-					<td><%=content2 %></td>
+					<td><%=ntcontent %></td>
 					<td><%=rdate %></td>
 					</tr>	
 				
@@ -258,14 +258,14 @@ tr,td {
 				</tr>
 				<%
 				while(rs3.next()){
-				String menuname = rs3.getString("name");
-				String content3 = rs3.getString("content");
+				String menuname = rs3.getString("menuname");
+				String mecontent = rs3.getString("mecontent");
 				String price = rs3.getString("price");
 				
 				%>
 					<tr>
 					<td><%=menuname %></td>
-					<td><%=content3 %></td>
+					<td><%=mecontent %></td>
 					<td><%=price %></td>
 					</tr>	
 				
@@ -293,16 +293,15 @@ tr,td {
 				</tr>
 				<%
 				while(rs4.next()){
-				String userid = rs4.getString("id");
+				String cuid = rs4.getString("cuid");
 				String lev = rs4.getString("lev");
-				String content4 = rs4.getString("content");
+				String recontent = rs4.getString("recontent");
 				String rdate = rs4.getString("rdate");
-				
 				%>
 					<tr>
-					<td><%=userid %></td>
+					<td><%=cuid %></td>
 					<td><%=lev %></td>
-					<td><%=content4 %></td>
+					<td><%=recontent %></td>
 					<td><%=rdate %></td>
 					</tr>	
 				

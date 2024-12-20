@@ -9,8 +9,8 @@
 <!-- 나중에 가게 고유번호랑 연결 -->
 <%
 String sql2 ="SELECT "
-			+"		STID,GUBUN,TITLE,CONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" 	FROM STOREBOARD "
+			+"		STID,GUBUN,TITLE,NTCONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
+			+" 	FROM STORENOTICE "
 			+" 		ORDER BY RDATE DESC";
 ResultSet rs2 = stmt.executeQuery(sql2);
 %>
@@ -79,9 +79,6 @@ tr,td {
 				<tr>
 					<td colspan="4">
 						공지사항
-						<button type="button" onclick="location=''">
-							더보기
-						</button>
 					</td>
 				</tr>
 				<tr>
@@ -95,13 +92,13 @@ tr,td {
 				while(rs2.next()){
 				String gubun = rs2.getString("gubun");
 				String title = rs2.getString("title");
-				String content2 = rs2.getString("content");
+				String ntcontent = rs2.getString("ntcontent");
 				String rdate = rs2.getString("rdate");				
 				%>
 					<tr>
 					<td><%=gubun %></td>
 					<td><%=title %></td>
-					<td><%=content2 %></td>
+					<td><%=ntcontent %></td>
 					<td><%=rdate %></td>
 					</tr>	
 				

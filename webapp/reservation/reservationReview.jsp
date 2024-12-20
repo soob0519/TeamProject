@@ -10,8 +10,8 @@
 <%
 String sql4 ="SELECT	"
 			+"			STID"
-			+"			,ID	"
-			+"			,CONTENT	"
+			+"			,CUID	"
+			+"			,RECONTENT	"
 			+"			,LEV	"
 			+"		,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
 			+" FROM STOREREVIEW ORDER BY RDATE DESC";
@@ -84,9 +84,6 @@ tr,td {
 				<tr>
 					<td colspan="4">
 						리뷰
-						<button type="button" onclick="location=''">
-							더보기
-						</button>	
 					</td>
 				</tr>
 				<tr>
@@ -97,16 +94,16 @@ tr,td {
 				</tr>
 				<%
 				while(rs4.next()){
-				String userid = rs4.getString("id");
+				String cuid = rs4.getString("cuid");
 				String lev = rs4.getString("lev");
-				String content4 = rs4.getString("content");
+				String recontent = rs4.getString("recontent");
 				String rdate = rs4.getString("rdate");
 				
 				%>
 					<tr>
-					<td><%=userid %></td>
+					<td><%=cuid %></td>
 					<td><%=lev %></td>
-					<td><%=content4 %></td>
+					<td><%=recontent %></td>
 					<td><%=rdate %></td>
 					</tr>	
 				

@@ -11,8 +11,8 @@
 <%
 String sql3 ="SELECT "
 			+"			STID	"
-			+"			,NAME	"
-			+"			,CONTENT	"
+			+"			,MENUNAME	"
+			+"			,MECONTENT	"
 			+"			,PRICE		"
 			+" 		FROM STOREMENU";
 ResultSet rs3 = stmt2.executeQuery(sql3);
@@ -83,6 +83,48 @@ String nex = n_yy+"-"+n_mm;
   <title>예약</title>
   <link rel="stylesheet" href="../css/style.css" />
  </head>
+ <script>
+	// box 값 가져오기
+	// 1증가 시키기
+	// box에 증가 값 넣기
+ function fn_plus(a,cnt,price) { // 매개변수
+	let box = document.getElementsByName("box")[cnt].value;
+ 	var totalPrice = parseInt(document.reserfrm.totalPrice.value);
+	// alert(box); alert(totalPrice); alert(price2);
+	var price2 = price.replace(",","");
+	var price3 = parseInt(price2);
+	if (a == "+") {
+		box++;
+		totalPrice += price3;
+	} else if (a == "-") {
+		box--;
+		totalPrice -= price3;
+	}
+	
+	if (box>100) box = 100;
+	if (box<0) box = 0; // 실행 라인이 한개 밖에 없는 경우에는 중괄호 생략가능
+	
+	document.getElementsByName("box")[cnt].value = box;
+	document.reserfrm.totalPrice.value = totalPrice;
+ }
+ 
+ function fn_keyup(cnt) {
+	let box = document.getElementsByName("box")[cnt].value;
+	if (box>100) box = 100;
+	document.getElementsByName("box")[cnt].value = box;
+ }
+ 
+ function fn_date(vdate){
+	location = "reservation.jsp?vdate="+vdate;
+ }
+ 
+ function fn_save(){
+	 let to = "<%=vdate %>";
+	 document.reserfrm.rvdate.value = to;
+	 document.reserfrm.submit();
+ }
+ </script>
+ 
  
  <style>
 <!-- 화면 스타일 -->
@@ -121,7 +163,7 @@ a {
 	<form name="reserfrm" method="post" action="reservationSave.jsp">
 		<header>
 			<div>
-				<button type="button" class="button1" onclick="fn_submit()">
+				<button type="button" class="button1" onclick="fn_save()">
 					<b>예약하기</b>
 				</button>
 			</div>
@@ -174,7 +216,7 @@ a {
 							<td height="80"></td>
 						<%
 						}
-						for(int d=1; d<lastday; d++){
+						for(int d=1; d<=lastday; d++){
 							tdCnt++;
 							String v_today = v_date + "-" + d;
 							String tdColor = "#ffffff";
@@ -186,8 +228,7 @@ a {
 							}
 						%>
 							<td height="80" width="100" bgcolor="<%=tdColor %>">
-							<a href="reservation.jsp?vdate=<%=v_today %>" style="display:block; width:160px; height:80px;"><%=d %></a>
-							<input type="hidden" name="vdate" value="<%=v_today %>">
+							<a href="javascript:fn_date('<%=v_today %>')" style="display:block; width:160px; height:80px;"><%=d %></a>
 							</td>
 						<%
 							if(tdCnt%7 == 0){
@@ -195,6 +236,7 @@ a {
 							}
 						}
 						%>
+						<input type="hidden" name="rvdate" value="" >
 						</tr>
 				<tr>
 					<td colspan="7">인원</td>
@@ -264,14 +306,17 @@ a {
 				<%
 				int cnt = 0;
 				while(rs3.next()){
-					String menuname = rs3.getString("name");
-					String content3 = rs3.getString("content");
+					String menuname = rs3.getString("menuname");
+					String mecontent = rs3.getString("mecontent");
 					String price = rs3.getString("price");
 				
 				%>
 					<tr>
-					<td><%=menuname %></td>
-					<td><%=content3 %></td>
+					<td>
+					<%=menuname %>
+					<input type="hidden" name="menuname" value="<%=menuname %>">
+					</td>
+					<td><%=mecontent %></td>
 					<td><%=price %></td>
 					<td>
 						<button type="button" onclick="fn_plus('+','<%=cnt %>','<%=price %>')">+</button>
@@ -304,36 +349,3 @@ a {
 </html>
 
 
-<script>
-	// box 값 가져오기
-	// 1증가 시키기
-	// box에 증가 값 넣기
- function fn_plus(a,cnt,price) { // 매개변수
-	let box = document.getElementsByName("box")[cnt].value;
- 	var totalPrice = parseInt(document.reserfrm.totalPrice.value);
-	// alert(box); alert(totalPrice); alert(price2);
-	var price2 = price.replace(",","");
-	var price3 = parseInt(price2);
-	if (a == "+") {
-		box++;
-		totalPrice += price3;
-	} else if (a == "-") {
-		box--;
-		totalPrice -= price3;
-	}
-	
-	if (box>100) box = 100;
-	if (box<0) box = 0; // 실행 라인이 한개 밖에 없는 경우에는 중괄호 생략가능
-	
-	document.getElementsByName("box")[cnt].value = box;
-	document.reserfrm.totalPrice.value = totalPrice;
- }
- 
- function fn_keyup(cnt) {
-	let box = document.getElementsByName("box")[cnt].value;
-	if (box>100) box = 100;
-	document.getElementsByName("box")[cnt].value = box;
- }
- 
- </script>
- 

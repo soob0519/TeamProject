@@ -10,8 +10,8 @@
 <%
 String sql3 ="SELECT "
 			+"			STID	"
-			+"			,NAME	"
-			+"			,CONTENT	"
+			+"			,MENUNAME	"
+			+"			,MECONTENT	"
 			+"			,PRICE		"
 			+" 		FROM STOREMENU";
 ResultSet rs3 = stmt2.executeQuery(sql3);
@@ -91,14 +91,14 @@ tr,td {
 				</tr>
 				<%
 				while(rs3.next()){
-				String menuname = rs3.getString("name");
-				String content3 = rs3.getString("content");
+				String menuname = rs3.getString("menuname");
+				String mecontent = rs3.getString("mecontent");
 				String price = rs3.getString("price");
 				
 				%>
 					<tr>
 					<td><%=menuname %></td>
-					<td><%=content3 %></td>
+					<td><%=mecontent %></td>
 					<td><%=price %></td>
 					</tr>	
 				

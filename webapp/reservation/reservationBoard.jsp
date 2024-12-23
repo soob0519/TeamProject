@@ -10,7 +10,7 @@
 <%
 String sql2 ="SELECT "
 			+"		STID,GUBUN,TITLE,NTCONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" 	FROM STORENOTICE "
+			+" 	FROM STORENOTICE  WHERE STID='prater' "
 			+" 		ORDER BY RDATE DESC";
 ResultSet rs2 = stmt.executeQuery(sql2);
 %>

@@ -14,7 +14,7 @@ String sql4 ="SELECT	"
 			+"			,RECONTENT	"
 			+"			,LEV	"
 			+"		,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" FROM STOREREVIEW ORDER BY RDATE DESC";
+			+" FROM STOREREVIEW  WHERE STID = 'prater' ORDER BY RDATE DESC";
 ResultSet rs4 = stmt3.executeQuery(sql4);
 %>
 

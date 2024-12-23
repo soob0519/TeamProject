@@ -5,41 +5,19 @@
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>title</title>
-  
+  <title>example</title>
+    <link rel="stylesheet" href="../css/style.css" />
  </head>
- 
- <style>
- header {
-	background-color:#ff6699;
-	height:100px;
-	width:100%;
- }
- nav {
-	background-color:#ccffcc;
-	height:50px;
-	width:100%;
-	margin-top:-16px;
-	text-align:center;
- }
- section {
-	/*background-color:#99ccff;*/
-	width:1200px;
-	height:1800px;
-	text-align:center;
-	margin: auto;
-	
- }
- footer {
-	background-color:#ffcc99;
-	height:100px;
-	width:100%;
- }
- </style>
- 
+
 	<body>
   
 		<header>
+			<div>
+				<input type="text" name="search" style="width:500px; height:40px;">
+				<button type="button" style="width:60px; height:40px;">
+					<b>검색</b>
+				</button>
+			</div>
 		</header>
 		  
 		<nav>

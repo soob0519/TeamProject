@@ -17,7 +17,7 @@ String sql = "SELECT 	"
 					+",TEL	"
 					+",DAYOFF	"
 					+",INFORMATION	"
-			+"	FROM STOREINFO WHERE STID='prater' ";
+			+"	FROM STOREINFO WHERE STID='prater'";
 ResultSet rs = stmt.executeQuery(sql);
 rs.next();
 String stid = rs.getString("stid");
@@ -41,9 +41,9 @@ String sql2 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT "
 			+"				STID,GUBUN,TITLE,NTCONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" 			FROM STORENOTICE  WHERE STID='prater' "
+			+" 			FROM STORENOTICE "
 			+" 				ORDER BY RDATE DESC ) A ) B "
-			+"	WHERE	"
+			+"	WHERE STID = 'prater'	"
 			+" RN BETWEEN 1 AND 3";
 ResultSet rs2 = stmt.executeQuery(sql2);
 %>
@@ -59,8 +59,8 @@ String sql3 ="SELECT B.* FROM( "
 			+"			,MENUNAME	"
 			+"			,MECONTENT	"
 			+"			,PRICE		"
-			+" 		FROM STOREMENU  WHERE STID='prater' ) A ) B "
-			+"	WHERE	"
+			+" 		FROM STOREMENU ) A ) B "
+			+"	WHERE STID = 'prater'	"
 			+" RN BETWEEN 1 AND 3";
 ResultSet rs3 = stmt2.executeQuery(sql3);
 %>
@@ -76,8 +76,8 @@ String sql4 ="SELECT B.* FROM( "
 			+"			,RECONTENT	"
 			+"			,LEV	"
 			+"		,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" FROM STOREREVIEW  WHERE STID='prater' ORDER BY RDATE DESC ) A ) B "
-			+"	WHERE	"
+			+" FROM STOREREVIEW ORDER BY RDATE DESC ) A ) B "
+			+"	WHERE STID = 'prater'	"
 			+" 		RN BETWEEN 1 AND 3";
 ResultSet rs4 = stmt3.executeQuery(sql4);
 %>

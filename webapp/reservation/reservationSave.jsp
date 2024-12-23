@@ -43,7 +43,8 @@ String sql ="INSERT INTO ABC(UNQ,CUID,NAME,RD,PEOPLE,MENU,TOTALPRICE,STATE,DAY,T
 			+"					,'"+totalprice+"'"
 			+"					,'1'"
 			+"					,'"+rvdate+"'"
-			+"					,'"+time+"' )";
+			+"					,'"+time+"' )"
+			+"			WHERE STID = 'prater'	";
 
 int result = stmt.executeUpdate(sql);
 %>

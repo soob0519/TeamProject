@@ -14,7 +14,7 @@ String sql3 ="SELECT "
 			+"			,MENUNAME	"
 			+"			,MECONTENT	"
 			+"			,PRICE		"
-			+" 		FROM STOREMENU";
+			+" 		FROM STOREMENU WHERE STID='prater' ";
 ResultSet rs3 = stmt2.executeQuery(sql3);
 %>
 <!-- 달력표시 -->

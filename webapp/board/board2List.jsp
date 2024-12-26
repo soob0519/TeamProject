@@ -13,9 +13,9 @@ if(code == null || (!code.equals("1") && !code.equals("2")) ) {
 	code = "1";
 }
 
-String msg = "자주 묻는 질문";
+String msg = "공지사항";
 if( code.equals("2") ) {
-	msg = "Q&A";
+	msg = "자주 묻는 질문";
 }
 
 String Where = " WHERE gubun='"+code+"' "; 
@@ -83,7 +83,7 @@ ResultSet rs2 = stmt.executeQuery(sql2);
  <head>
   <meta charset="UTF-8">
   <title><%=msg %></title>
-
+	<link rel="stylesheet" href="../css/style.css" />
  </head>
  <style>
  
@@ -150,9 +150,9 @@ ResultSet rs2 = stmt.executeQuery(sql2);
 			int hits = rs2.getInt("hits");
 			
 			if(gubun.equals("1")) {
-				gubun = "자주 묻는 질문";	
+				gubun = "공지사항";	
 			} else if(gubun.equals("2")) {
-				gubun = "Q&A";
+				gubun = "자주 묻는 질문";
 			}
 			
 			String sql3 = "select count(*) from board2sub where punq='"+unq+"'";

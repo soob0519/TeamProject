@@ -163,7 +163,7 @@ a {
 	<form name="reserfrm" method="post" action="reservationSave.jsp">
 		<header>
 			<div>
-				<button type="button" class="button1" onclick="fn_save()">
+				<button type="button" style="width:500px; height:40px;border-radius:20px;font-weight:bold;" onclick="fn_save()">
 					<b>예약하기</b>
 				</button>
 			</div>

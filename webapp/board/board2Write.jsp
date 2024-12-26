@@ -1,12 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%
+String code = request.getParameter("code");
+String msg = "공지사항";
+if( code != null && code.equals("2") ) {
+	msg = "자주 묻는 질문";
+}
+%>
+
 <!DOCTYPE html>
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>일반게시판</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <title><%=msg %></title>
+<link rel="stylesheet" href="../css/style.css" />
  </head>
  
  <script>
@@ -52,14 +60,11 @@
  </aside>
  
  <section>
-
 	<div class="div_title">
-		공지사항
+		<%=msg %>
 	</div>
-
 	<div class="div_agrees">
-	
-	<form name="frm" method="post" action="boardWriteSave.jsp">
+	<form name="frm" method="post" action="board2WriteSave.jsp">
 		<table class="table_member">
 			<colgroup>
 				<col width="20%"/>
@@ -75,7 +80,16 @@
 			</tr>
 			<tr>
 				<th>이름</th>
-				<td><input type="text" name="name" class="input1"></td>
+				<td><input type="text" name="writer" class="input1"></td>
+			</tr>
+			<tr>
+				<th>구분</th>
+				<td>
+					<input type="radio" name="gubun" value="1" 
+					<%if(code.equals("1")){ out.print("checked"); } %>>공지사항
+					<input type="radio" name="gubun" value="2" 
+					<%if(code.equals("2")){ out.print("checked"); } %>>자주 묻는 질문
+				</td>
 			</tr>
 			<tr>
 				<th>내용</th>
@@ -86,15 +100,14 @@
 			<button type="submit" class="button4" onclick="fn_submit();return false;">등록</button>
 			<button type="reset" class="button4">취소</button>
 		</div>
-		
 	</form>
-	
 	</div>
-	
  </section>
  
  <footer>
-
+ <!-- footer S -->
+ <%@ include file="../include/footer.jsp" %>
+ <!-- footer E -->
  </footer>
   
  </body>

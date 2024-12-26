@@ -83,7 +83,7 @@ ResultSet rs2 = stmt.executeQuery(sql2);
  <section>
 
 	<div class="div_title">
-		공지사항
+		Q&A
 	</div>
 
 
@@ -127,7 +127,7 @@ ResultSet rs2 = stmt.executeQuery(sql2);
 		%>
 		<tr>
 			<td><%=rownum %></td>
-			<td>공지</td>
+			<td>Q&A</td>
 			<td style="text-align:left;"><a href="boardDetail.jsp?unq=<%=unq %>"><%=title %></a></td>
 			<td><%=rdate %></td>
 			<td><%=hits %></td>

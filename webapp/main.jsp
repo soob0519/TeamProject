@@ -58,6 +58,7 @@ body > nav > div > button {
 				<input type="text" name="search" style="width:500px; height:40px;">
 				<button type="button" style="width:60px; height:40px;">
 					<b>검색</b>
+					<!-- 가게 이름만 검색 가능 -->
 				</button>
 			</div>
 		</header>
@@ -73,7 +74,7 @@ body > nav > div > button {
 		</aside>
 		  
 		<section>
-		가게들 사진 쫘르륵
+		가게들 리스트 쫘르륵
 		선택시 가게로 들어가는 화면
 		로그인 세션 연결하기
 		로그인 로그아웃

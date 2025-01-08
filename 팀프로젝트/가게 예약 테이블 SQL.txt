@@ -1,0 +1,6 @@
+가게 예약 테이블 SQL
+날짜 시간 reserdate
+메뉴이름 menuname
+
+최종금액 totalprice
+

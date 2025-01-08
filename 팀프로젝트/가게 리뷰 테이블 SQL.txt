@@ -1,5 +1,5 @@
 가게 리뷰 테이블 SQL
-회원고유번호	id
+회원아이디		id
 가게고유번호	stid
 가게평점		lev
 리뷰내용		content

@@ -6,15 +6,35 @@
 <!-- DB연결 -->
 <%@ include file="../include/oracleCon.jsp" %>
 
+<%
+// 세션검사(로그인 상태인지 체크하는 코드)
+// 세션타입이라서 문자타입으로 만들어야한다. (스트링 괄호붙이거나, 뒤에 공백 붙여서 문자타입으로 만들기.)
+String SessionUserid = (String)session.getAttribute("SessionUserid");		// 로그인 하지 않으면 null 값이 된다.
+// 또는 String SessionUserid = session.getAttribute("SESSION_ID")+"";
+%>
+
+<%
+if(SessionUserid == null || SessionUserid.equals("")){ 
+%>
+	<script>
+	alert("로그인 후 예약이 가능합니다.");
+	location="/login/loginWrite.jsp";
+	</script>
+<%
+}
+%>
+
 <!-- 가게 메뉴 관련 SQL -->
 <!-- 나중에 가게 고유번호랑 연결 -->
 <%
+String unq = request.getParameter("stid");
+
 String sql3 ="SELECT "
 			+"			STID	"
-			+"			,NAME	"
-			+"			,CONTENT	"
+			+"			,MENUNAME	"
+			+"			,MECONTENT	"
 			+"			,PRICE		"
-			+" 		FROM STOREMENU";
+			+" 		FROM STOREMENU WHERE STID='"+unq+"' ";
 ResultSet rs3 = stmt2.executeQuery(sql3);
 %>
 <!-- 달력표시 -->
@@ -80,68 +100,86 @@ String nex = n_yy+"-"+n_mm;
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>title</title>
-  
+  <title>예약</title>
+  <link rel="stylesheet" href="../css/resStyle.css" />
  </head>
+ <script>
+	// box 값 가져오기
+	// 1증가 시키기
+	// box에 증가 값 넣기
+ function fn_plus(a,cnt,price) { // 매개변수
+	let box = document.getElementsByName("box")[cnt].value;
+ 	var totalPrice = parseInt(document.reserfrm.totalPrice.value);
+	// alert(box); alert(totalPrice); alert(price2);
+	var price2 = price.replace(",","");
+	var price3 = parseInt(price2);
+	if (a == "+") {
+		box++;
+		totalPrice += price3;
+	} else if (a == "-") {
+		box--;
+		totalPrice -= price3;
+		if(totalPrice < 0){
+			totalPrice = 0
+		}
+	}
+	
+	if (box>100) box = 100;
+	if (box<0) box = 0; // 실행 라인이 한개 밖에 없는 경우에는 중괄호 생략가능
+	
+	document.getElementsByName("box")[cnt].value = box;
+	document.reserfrm.totalPrice.value = totalPrice;
+ }
+ 
+ function fn_keyup(cnt) {
+	let box = document.getElementsByName("box")[cnt].value;
+	if (box>100) box = 100;
+	document.getElementsByName("box")[cnt].value = box;
+ }
+ 
+ function fn_date(vdate,unq){
+	var vdate1 = vdate.split("-");
+	if(vdate1[1].length<2){
+		vdate1[1] = "0"+vdate1[1];
+	}
+	if(vdate1[2].length<2){
+		vdate1[2] = "0"+vdate1[2];
+	}
+	vdate = vdate1[0]+"-"+vdate1[1]+"-"+vdate1[2]
+	
+	location = "reservation.jsp?stid="+unq+"&vdate="+vdate;
+ }
+ 
+ function fn_save(){
+	 let to = "<%=vdate %>";
+	 let unq = "<%=unq %>";
+	 document.reserfrm.rvdate.value = to;
+	 document.reserfrm.stid.value = unq;
+	 document.reserfrm.submit();
+ }
+ </script>
+ 
  
  <style>
-header {
-	width:100%;
-	height:60px;
-	padding-top:20px;
-	background-color:aliceblue;
-	font-size:20px;
-	font-weight:bold;
-	text-align:center;
-	position:fixed;
-}
-body > header > div > input[type=text] {
-    border-radius: 20px;
-    padding-left: 20px;
-    font-size:20px;
-}
-body > header > div > button {
-   	border-radius: 20px;
-}
-body > nav {
-    padding-top: 80px;
-}
-body > nav > div {
-	width:100%;
-	height:50px;
-	background-color:#c4f7f4;
-	font-size:18px;
-	text-align:center;
-	padding:5px;
-}
-section {
-	width:1200px;
-	height:1800px;
-	margin: auto;
-
-}
-footer {
-	background-color:#ffcc99;
-	height:100px;
-	width:100%;
-}
-
-body {
-	background-color:ivory;	
-}
 <!-- 화면 스타일 -->
-
 div {
 	border:1px solid #99ff00;
-	width:1200px;
+	width:1250px;
 	margin-top:10px;
 	vertical-align:center;
 	background-color:#ffffff;
 }
 
 table {
-	border:1px solid #003366;
-	width:1200px;
+	border:0px solid #003366;
+	width:1250px;
+	vertical-align:center;
+	background-color:lightslategray;
+}
+
+.table1 {
+	border:0px solid #003366;
+	width:1250px;
 	vertical-align:center;
 	background-color:#ffffff;
 }
@@ -150,49 +188,71 @@ span {
 	background-color:#ffffff;
 }
 
-tr,td {
-	border:1px solid #ff66ff;
-}
-
 a {
 	text-decoration:none;
 	 color: black;
 }
+body > form > footer > div {
+    justify-self: center;
+}
+body > form > footer > div > div.div2 > a {
+	    color: floralwhite;
+	    font-size: 12px;
+	}
 
  </style>
  
 	<body>
-  
+	<form name="reserfrm" method="post" action="reservationSave.jsp">
 		<header>
 			<div>
-				<button type="button" style="width:500px; height:40px;" onclick="location='reservationSave.jsp'">
+				<button type="button" style="width:500px; height:40px;border-radius:20px;font-weight:bold;" onclick="fn_save()">
 					<b>예약하기</b>
 				</button>
 			</div>
-		</header>
-		  
+		</header>		 
 		<nav>
+			<div>
+			<table>
+				<tr>
+					<th><a href="/main.jsp">홈</a></th>
+					<%
+					if(SessionUserid == null){
+					%>
+					<th><a href="/login/loginWrite.jsp">로그인</a></th>
+					<th><a href="/login/loginSelect.jsp">회원가입</a></th>
+					<%
+					} else {
+					%>
+					<th><a href="/myPage/myPageSession.jsp">마이페이지</a></th>
+					<th><a href="/include/logout.jsp">로그아웃</a></th>
+					<%
+					}
+					%>
+				</tr>
+			</table>
+			</div>
 		</nav>
 		  
 		<aside>
 		</aside>
 		  
 		<section>
+		
+		
 		<!-- 가게 예약테이블 -->
-		<div>
 			<table>
 				<tr>
 					<td colspan="2">예약 테이블</td>
-					<!--날짜.인원.시간-->
 				</tr>
 				<tr>
-					<table class="type08" align="center">	
+					<table class="table1" align="center">	
 						<caption style="text-align:left;">
 							<% // 삼항연산 :: (비교연산식)?true:false %>
 							<%=v_yy %>년 <%=(v_mm<10)?("0"+v_mm):(""+v_mm) %>월
 							&nbsp;&nbsp;
-							<a href = "reservation.jsp?vdate=<%=bef %>">(이전)</a>
-							<a href = "reservation.jsp?vdate=<%=nex %>">(다음)</a>
+							<a href = "reservation.jsp?vdate=<%=bef %>">(이전달)</a>
+							<a href = "reservation.jsp?vdate=<%=nex %>">(다음달)</a>
 							<a href = "reservation.jsp">(오늘)</a>
 						</caption>
 						<tr>
@@ -214,10 +274,10 @@ a {
 							<td height="80"></td>
 						<%
 						}
-						for(int d=1; d<lastday; d++){
+						for(int d=1; d<=lastday; d++){
 							tdCnt++;
 							String v_today = v_date + "-" + d;
-							String tdColor = "#ffffff";
+							String tdColor = "floralwhite";
 							if(today.equals(v_today)) {
 								tdColor = "yellow";
 							}
@@ -225,8 +285,8 @@ a {
 								tdColor = "blue";
 							}
 						%>
-							<td height="80" width="100" bgcolor="<%=tdColor %>">
-							<a href="reservation.jsp?vdate=<%=v_today %>" style="display:block; width:160px; height:80px;"><%=d %></a>
+							<td style="height:80px; width:100px; background-color:<%=tdColor %>;">
+							<a href="javascript:fn_date('<%=v_today %>','<%=unq %>')" style="display:block; width:160px; height:80px;"><%=d %></a>
 							</td>
 						<%
 							if(tdCnt%7 == 0){
@@ -234,84 +294,116 @@ a {
 							}
 						}
 						%>
+						<input type="hidden" name="rvdate" value="" >
+						<input type="hidden" name="stid" value="<%=unq %>" >
 						</tr>
 				<tr>
 					<td colspan="7">인원</td>
 				</tr>
 				<tr>
-					<td  colspan="7">1명</td>
-					<!-- 인원을 최대인원을 선택하면 1~최대인원 -->
+					<td colspan="7">
+						<select name="people">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+						</select>
+					</td>
 					
 				</tr>
 				<tr>
 					<td colspan="7"> 시간</td>
 				</tr>
 				<tr>
-					<td colspan="7">12:00</td>
-					<!--  시간차를 선택하면 자동으로 영업시간 맞춰서 자동으로  -->
+					<td colspan="7">
+						<select name="time">
+							<option value="12:00">12:00</option>
+							<option value="12:30">12:30</option>
+							<option value="13:00">13:00</option>
+							<option value="13:30">13:30</option>
+							<option value="14:00">14:00</option>
+							<option value="14:30">14:30</option>
+							<option value="15:00">15:00</option>
+							<option value="15:30">15:30</option>
+							<option value="16:00">16:00</option>
+							<option value="16:30">16:30</option>
+						</select>
+					</td>
 				</tr>
 			</table>
-			<div>
-				<!-- 다음버튼 > 메뉴선택화면 -->
-				<button type="button">다음</button>
-			</div>
 		</div>
-		<!-- 가게 예약테이블2 -->
-		<div>
-			<table>
-				<tr>
-					<td>예약 메뉴 선택</td>
-				</tr>
-			</table>
 			<!-- 메뉴판 (정보) 테이블 -->
-			<table>
+			<table class="table1">
+				<colgroup>
+				<col width="20%"/>
+				<col width="40%"/>
+				<col width="20%"/>
+				<col width="*%"/>
+				</colgroup>
 				<tr>
-					<td colspan="3">
-						메뉴
+					<td colspan="4">
+						메뉴선택
 					</td>
 				</tr>
 				<tr>
 					<td>메뉴명</td>
 					<td>설명</td>
 					<td>가격</td>
+					<td>수량</td>
 				</tr>
 				<%
+				int cnt = 0;
 				while(rs3.next()){
-				String menuname = rs3.getString("name");
-				String content3 = rs3.getString("content");
-				String price = rs3.getString("price");
+					String menuname = rs3.getString("menuname");
+					String mecontent = rs3.getString("mecontent");
+					String price = rs3.getString("price");
 				
 				%>
 					<tr>
-					<td><%=menuname %></td>
-					<td><%=content3 %></td>
+					<td>
+					<%=menuname %>
+					<input type="hidden" name="menuname" value="<%=menuname %>">
+					</td>
+					<td><%=mecontent %></td>
 					<td><%=price %></td>
+					<td>
+						<button type="button" onclick="fn_plus('+','<%=cnt %>','<%=price %>')">+</button>
+						<input type="number" name="box" value="0" size="3" style="text-align:right;" onkeyup="fn_keyup('<%=cnt %>')">
+						<button type="button" onclick="fn_plus('-','<%=cnt %>','<%=price %>')">-</button>
+					</td>
 					</tr>	
 				
 				<%
+					cnt++;
 				}
 				%>
-			</table>
 				<tr>
-					<td>+ -</td>
+					<td colspan="2">총금액</td>
+					<td colspan="2">
+						<input type="text" name="totalPrice" value="0" readonly>
+						원
+					</td>
 				</tr>
 			</table>
-			<!-- 메뉴 추가하면 나오게 만들기 if이용 -->
-			<div>
-			추가한 메뉴 +-
-			</div>
-			<div>
-			총금액
-			</div>
-			<div>
-				<!--  예약하기 버튼 > 예약완료 나오고 다시 그전 화면으로 -->
-				<button type="submit">예약하기</button>
-			</div>
-		</div>
+		</table>
+		
+		
 		</section>
   
 		<footer>
-		</footer>  
-  
+		<!-- footer Start -->
+		<%@ include file = "../../include/footer.jsp" %>
+		<!-- footer End -->
+		</footer>
+		
+	</form> 
 	</body>
 </html>
+
+

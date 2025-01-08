@@ -6,6 +6,36 @@
 <%@ include file="../include/oracleCon.jsp" %>
 
 <%
+// 세션검사(로그인 상태인지 체크하는 코드)
+// 세션타입이라서 문자타입으로 만들어야한다. (스트링 괄호붙이거나, 뒤에 공백 붙여서 문자타입으로 만들기.)
+String SessionUserid = (String)session.getAttribute("SessionUserid");		// 로그인 하지 않으면 null 값이 된다.
+// 또는 String SessionUserid = session.getAttribute("SESSION_ID")+"";
+%>
+
+<%
+String searchField = request.getParameter("searchField");
+String searchText  = request.getParameter("searchText");
+
+String Where = ""; 
+
+if( searchText != null && !searchText.trim().equals("") ) {
+	switch(searchField) {
+	case "all"     : Where += " WHERE TITLE LIKE '%"+searchText+"%' OR CONTENT LIKE '%"+searchText+"%' ";
+		break;
+	case "title"   : Where += " WHERE TITLE LIKE '%"+searchText+"%' ";
+		break;
+	case "content" : Where += " WHERE CONTENT LIKE '%"+searchText+"%' ";
+		break;
+	}
+}
+
+String search = "";
+if(searchText == null || searchText.equals("")){
+	search = "";
+} else {
+	search = "searchField="+searchField+"&searchText="+searchText;
+}
+
 // 출력페이지 번호
 String pageNo = request.getParameter("page");
 if(pageNo == null ){
@@ -17,7 +47,7 @@ int unitDate = 10;
 // 한 화면당 출력 페이지 개수
 int unitPage = 10;
 
-String sql1 = "SELECT COUNT(*) FROM NBOARD";
+String sql1 = "SELECT COUNT(*) FROM QBOARD";
 ResultSet rs1 = stmt.executeQuery(sql1);
 rs1.next();
 int total = rs1.getInt(1);
@@ -38,16 +68,15 @@ int eno = sno+(unitDate-1);
 //String sql2 = " SELECT UNQ,TITLE,NAME,HITS,to_char(RDATE,'yyyy.mm.dd') RDATE FROM NBOARD "
 //		+ "  ORDER BY UNQ DESC";
 
-
 String sql2 =" SELECT B.* FROM ("
 			+"	SELECT ROWNUM RN, A.* FROM("
 			+"		SELECT"
 			+"			 UNQ,TITLE,NAME,HITS,to_char(RDATE,'yyyy.mm.dd') RDATE"
-			+"		FROM NBOARD"
+			+"		FROM QBOARD"
+			+ Where
 			+"		ORDER BY UNQ DESC ) A ) B"
 			+" WHERE"
 			+"	RN BETWEEN "+sno+" AND "+eno ;
-
 ResultSet rs2 = stmt.executeQuery(sql2);
 
 %>
@@ -71,9 +100,26 @@ ResultSet rs2 = stmt.executeQuery(sql2);
  </header>
  
  <nav>
-  <!-- top menu S -->
- <%@ include file="../include/boardMenu.jsp" %>
- <!-- top menu E -->
+ 	<div>
+		<table>
+				<tr>
+					<th><a href="/main.jsp">홈</a></th>
+					<%
+					if(SessionUserid == null){
+					%>
+					<th><a href="/login/loginWrite.jsp">로그인</a></th>
+					<th><a href="/login/loginSelect.jsp">회원가입</a></th>
+					<%
+					} else {
+					%>
+					<th><a href="/myPage/myPageSession.jsp">마이페이지</a></th>
+					<th><a href="/include/logout.jsp">로그아웃</a></th>
+					<%
+					}
+					%>
+				</tr>
+			</table>
+			</div>
  </nav>
  
  <aside>
@@ -83,18 +129,18 @@ ResultSet rs2 = stmt.executeQuery(sql2);
  <section>
 
 	<div class="div_title">
-		공지사항
+		자주 묻는 질문
 	</div>
 
 
 	<div class="div_search">
 	<form name="searchForm" method="post" action="boardList.jsp">
 		<select name="searchField" class="select1">
-			<option value="">전체</option>
-			<option value="">제목</option>
-			<option value="">내용</option>
+			<option value="all">전체</option>
+			<option value="title">제목</option>
+			<option value="content">내용</option>
 		</select>
-		<input type="text" name="search" class="input3">
+		<input type="text" name="searchText" class="input3">
 		<button type="submit" class="button3">검색</button>
 	</form>
 	</div>
@@ -127,7 +173,7 @@ ResultSet rs2 = stmt.executeQuery(sql2);
 		%>
 		<tr>
 			<td><%=rownum %></td>
-			<td>공지</td>
+			<td>자주 묻는 질문</td>
 			<td style="text-align:left;"><a href="boardDetail.jsp?unq=<%=unq %>"><%=title %></a></td>
 			<td><%=rdate %></td>
 			<td><%=hits %></td>
@@ -138,27 +184,23 @@ ResultSet rs2 = stmt.executeQuery(sql2);
 		%>
 	</table>
 	
-	<div style="margin-top:10px; text-align:right;">
 	
-	<button type="button" class="button4" onclick="location='boardWrite.jsp'">글쓰기</button>
-	
-	</div>
 	
 	<div style="margin-top:10px; text-align:center;">
 		
-		<a href="boardList.jsp?page=1" class="num first"> 《 </a>
+		<a href="boardList.jsp?page=1&<%=search %>" class="num first"> 《 </a>
 		<a href="#" class="num bef"> 〈 </a>
 		
 		<%
 		for (int p=1; p<=lastpage; p++){
 		%>
-			<a href="boardList.jsp?page=<%=p %>" class="num"><%=p %></a>
+			<a href="boardList.jsp?page=<%=p %>&<%=search %>" class="num"><%=p %></a>
 		<%
 			//out.print("<a href='boardList.jsp?page="+p+"' class=\"num\"> "+p+" </a> ");
 		}
 		%>
 		<a href="#" class="num bef"> 〉 </a>
-		<a href="boardList.jsp?page=<%=lastpage %>" class="num last"> 》 </a>
+		<a href="boardList.jsp?page=<%=lastpage %>&<%=search %>" class="num last"> 》 </a>
 	
 	</div>
 	

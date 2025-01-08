@@ -4,25 +4,32 @@
 
 <!-- DB연결 -->
 <%@ include file="../include/oracleCon.jsp" %>
-
+<%
+// 세션검사(로그인 상태인지 체크하는 코드)
+// 세션타입이라서 문자타입으로 만들어야한다. (스트링 괄호붙이거나, 뒤에 공백 붙여서 문자타입으로 만들기.)
+String SessionUserid = (String)session.getAttribute("SessionUserid");		// 로그인 하지 않으면 null 값이 된다.
+// 또는 String SessionUserid = session.getAttribute("SESSION_ID")+"";
+%>
 <!-- 가게 정보 관련 SQL -->
 <!-- 나중에 가게 고유번호랑 연결 -->
 <%
+String unq = request.getParameter("stid");
+
 String sql = "SELECT 	"
 					+"STID	"
 					+",STORENAME	"
-					+",CONTENT	"
+					+",STCONTENT	"
 					+",WAY	"
 					+",OPERATINGHOUR	"
 					+",TEL	"
 					+",DAYOFF	"
 					+",INFORMATION	"
-			+"	FROM STOREINFO";
+			+"	FROM STOREINFO WHERE STID='"+unq+"' ";
 ResultSet rs = stmt.executeQuery(sql);
 rs.next();
 String stid = rs.getString("stid");
 String storename = rs.getString("storename");
-String content = rs.getString("content");
+String stcontent = rs.getString("stcontent");
 String way = rs.getString("way");
 String operatinghour = rs.getString("operatinghour");
 String tel = rs.getString("tel");
@@ -30,8 +37,19 @@ String dayoff = rs.getString("dayoff");
 String information = rs.getString("information");
 
 //줄바꿈
-operatinghour = operatinghour.replace("\n", "<br>");
-information = information.replace("\n", "<br>");
+
+if(operatinghour == null || operatinghour.equals("null")){
+	operatinghour = "";
+} else {
+	operatinghour = operatinghour.replace("\n", "<br>");
+}
+
+if(information == null || information.equals("null")){
+	information = "";
+} else {
+	information = information.replace("\n", "<br>");
+}
+
 %>
 
 <!-- 가게 공지사항 관련 SQL -->
@@ -40,8 +58,8 @@ information = information.replace("\n", "<br>");
 String sql2 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT "
-			+"				STID,GUBUN,TITLE,CONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" 			FROM STOREBOARD "
+			+"				STID,GUBUN,TITLE,NTCONTENT,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
+			+" 			FROM STORENOTICE  WHERE STID='"+unq+"' "
 			+" 				ORDER BY RDATE DESC ) A ) B "
 			+"	WHERE	"
 			+" RN BETWEEN 1 AND 3";
@@ -56,10 +74,10 @@ String sql3 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT "
 			+"			STID	"
-			+"			,NAME	"
-			+"			,CONTENT	"
+			+"			,MENUNAME	"
+			+"			,MECONTENT	"
 			+"			,PRICE		"
-			+" 		FROM STOREMENU ) A ) B "
+			+" 		FROM STOREMENU  WHERE STID='"+unq+"' ) A ) B "
 			+"	WHERE	"
 			+" RN BETWEEN 1 AND 3";
 ResultSet rs3 = stmt2.executeQuery(sql3);
@@ -72,11 +90,11 @@ String sql4 ="SELECT B.* FROM( "
 			+"	SELECT ROWNUM RN, A.* FROM ( "
 			+"		SELECT	"
 			+"			STID"
-			+"			,ID	"
-			+"			,CONTENT	"
+			+"			,CUID	"
+			+"			,RECONTENT	"
 			+"			,LEV	"
 			+"		,TO_CHAR(RDATE,'YYYY-MM-DD') RDATE "
-			+" FROM STOREREVIEW ORDER BY RDATE DESC ) A ) B "
+			+" FROM STOREREVIEW  WHERE STID='"+unq+"' ORDER BY RDATE DESC ) A ) B "
 			+"	WHERE	"
 			+" 		RN BETWEEN 1 AND 3";
 ResultSet rs4 = stmt3.executeQuery(sql4);
@@ -93,40 +111,18 @@ ResultSet rs4 = stmt3.executeQuery(sql4);
  </head>
  
  <style>
-<!-- 화면 스타일 -->
-
-div {
-	border:1px solid #99ff00;
-	width:1200px;
-	margin-top:10px;
-	vertical-align:center;
-	background-color:#ffffff;
+.table1 {
+	width: 1035px!important;
 }
-
-table {
-	border:1px solid #003366;
-	width:1200px;
-	vertical-align:center;
-	background-color:#ffffff;
+.table2 {
+    width: 1035px!important;
 }
-
-span {
-	background-color:#ffffff;
-}
-
-tr,td {
-	border:1px solid #ff66ff;
-}
-
-
-
  </style>
  
 	<body>
-  
 		<header>
 		 	<div>
-				<button type="button" style="width:500px; height:40px;" onclick="location='/reservation/reservation.jsp'">
+				<button type="button" style="width:500px; height:40px;" onclick="location='/reservation/reservation.jsp?stid=<%=stid %>'">
 					<!-- 예약버튼 > 예약페이지로 -->
 					<b>예약</b>
 				</button>
@@ -134,7 +130,24 @@ tr,td {
 		</header>
 		<nav>
 			<div>
-				탑메뉴영역		
+			<table>
+				<tr>
+					<th><a href="/main.jsp">홈</a></th>
+					<%
+					if(SessionUserid == null){
+					%>
+					<th><a href="/login/loginWrite.jsp">로그인</a></th>
+					<th><a href="/login/loginMemberWrite1.jsp">회원가입</a></th>
+					<%
+					} else {
+					%>
+					<th><a href="/myPage/myPageSession.jsp">마이페이지</a></th>
+					<th><a href="/include/logout.jsp">로그아웃</a></th>
+					<%
+					}
+					%>
+				</tr>
+			</table>
 			</div>
 		</nav>
 		  
@@ -152,19 +165,15 @@ tr,td {
 		<div class="div_table1">
 			<table class="table1">
 				<tr>
-					<td>가게 종합정보 테이블</td>
+					<td>가게 종합정보</td>
 				</tr>
 				<tr>
 					<!-- 이름 -->
 					<td><%=storename %></td>
 				</tr>
 				<tr>
-					<!-- 별점 및 리뷰 (누르면 리뷰연결) -->
-					<td> 별 사진 4.9 리뷰 598개></td>
-				</tr>
-				<tr>
 					<!-- 짧은설명 -->
-					<td><%=content %></td>
+					<td><%=stcontent %></td>
 				</tr>
 				<tr>
 					<!-- 위치안내 -->
@@ -176,7 +185,7 @@ tr,td {
 		<div>
 			<table class="table1">
 				<tr>
-					<td colspan="2">가게 상세정보 테이블</td>
+					<td colspan="2">가게 상세정보</td>
 				</tr>
 				<tr>
 					<td>운영시간</td>
@@ -204,11 +213,11 @@ tr,td {
 		</div>
 		<!-- 가게 공지사항 게시판 테이블 -->
 		<div>
-			<table>
+			<table class="table2">
 				<tr>
 					<td colspan="4">
 						공지사항
-						<button type="button" onclick="location='reservationBoard.jsp'">
+						<button type="button" onclick="location='reservationBoard.jsp?stid=<%=stid %>'">
 							더보기
 						</button>
 					</td>
@@ -224,13 +233,13 @@ tr,td {
 				while(rs2.next()){
 				String gubun = rs2.getString("gubun");
 				String title = rs2.getString("title");
-				String content2 = rs2.getString("content");
+				String ntcontent = rs2.getString("ntcontent");
 				String rdate = rs2.getString("rdate");				
 				%>
 					<tr>
 					<td><%=gubun %></td>
 					<td><%=title %></td>
-					<td><%=content2 %></td>
+					<td><%=ntcontent %></td>
 					<td><%=rdate %></td>
 					</tr>	
 				
@@ -242,11 +251,11 @@ tr,td {
 		</div>
 		<!-- 메뉴판 (정보) 테이블 -->
 		<div>
-			<table>
+			<table  class="table2">
 				<tr>
 					<td colspan="3">
 						메뉴판
-						<button type="button" onclick="location='reservationMenu.jsp'">
+						<button type="button" onclick="location='reservationMenu.jsp?stid=<%=stid %>'">
 							더보기
 						</button>
 					</td>
@@ -258,14 +267,14 @@ tr,td {
 				</tr>
 				<%
 				while(rs3.next()){
-				String menuname = rs3.getString("name");
-				String content3 = rs3.getString("content");
+				String menuname = rs3.getString("menuname");
+				String mecontent = rs3.getString("mecontent");
 				String price = rs3.getString("price");
 				
 				%>
 					<tr>
 					<td><%=menuname %></td>
-					<td><%=content3 %></td>
+					<td><%=mecontent %></td>
 					<td><%=price %></td>
 					</tr>	
 				
@@ -276,11 +285,11 @@ tr,td {
 		</div>
 		<div>
 		<!-- 리뷰 (정보) -->
-			<table>
+			<table  class="table2">
 				<tr>
 					<td colspan="4">
 						리뷰
-						<button type="button" onclick="location='reservationReview.jsp'">
+						<button type="button" onclick="location='reservationReview.jsp?stid=<%=stid %>'">
 							더보기
 						</button>	
 					</td>
@@ -293,16 +302,15 @@ tr,td {
 				</tr>
 				<%
 				while(rs4.next()){
-				String userid = rs4.getString("id");
+				String cuid = rs4.getString("cuid");
 				String lev = rs4.getString("lev");
-				String content4 = rs4.getString("content");
+				String recontent = rs4.getString("recontent");
 				String rdate = rs4.getString("rdate");
-				
 				%>
 					<tr>
-					<td><%=userid %></td>
+					<td><%=cuid %></td>
 					<td><%=lev %></td>
-					<td><%=content4 %></td>
+					<td><%=recontent %></td>
 					<td><%=rdate %></td>
 					</tr>	
 				
@@ -313,13 +321,15 @@ tr,td {
 		</div>
 		<!-- 지도연동 -->
 		<div>
-		지도 > 배우고 사용
+		<!--  지도 > 배우고 사용-->
 		</div>
 		</section>
   
 		<footer>
-  
-</footer> 
+		<!-- footer Start -->
+		<%@ include file = "../../include/footer.jsp" %>
+		<!-- footer End -->
+		</footer>
   
 	</body>
 </html>

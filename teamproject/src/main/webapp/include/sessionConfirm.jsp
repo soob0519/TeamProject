@@ -4,7 +4,7 @@
 
 <%@include file="../include/oracleCon.jsp" %>
 <%
-String SessionUserid = (String) session.getAttribute("sessionId");
+String SessionUserid = (String) session.getAttribute("SessionUserid");
 if( SessionUserid == null ) {
 %>
 	<script>
@@ -17,7 +17,7 @@ String sessionCntSql = "select count(*) from member where id='"+SessionUserid+"'
 ResultSet sessionCntRs = stmt.executeQuery(sessionCntSql);
 sessionCntRs.next();
 if(sessionCntRs.getInt(1) == 0){
-	session.removeAttribute("sessionId");
+	session.removeAttribute("SessionUserid");
 %>
 	<script>
 	alert("세션아이디 검증실패!!");
